@@ -313,12 +313,15 @@ class Router
 
         $methodAllowedForPath = false;
 
+        $missingParamsRoute = null;
+
         foreach ($this->routes as $route) {
             $paramNames = [];
             $regex = $this->convertPathToRegex($route['path'], $paramNames);
 
+            // Path matches
             if (preg_match($regex, $requestPath, $matches)) {
-                // Path matches
+                // Method matches
                 if ($route['method'] === $this->requestedMethod) {
                     // Correct method too — this is the handler to run
                     $params = [];
@@ -363,17 +366,34 @@ class Router
                     // Method doesn't match, but path does
                     $methodAllowedForPath = true;
                 }
+            } else {
+                // Regex did NOT match. Check if path partially matches route static part to detect missing parameters.
+                $staticRoutePath = preg_replace('/\{[^\/]+\}/', '', $route['path']); // Remove param placeholders
+                $staticRoutePath = rtrim($staticRoutePath, '/'); // Remove trailing slash
+
+                // Check if requestPath starts with the static part of the route path
+                if ($staticRoutePath !== '' && str_starts_with($requestPath, $staticRoutePath)) {
+                    // The URL matches the base route but parameters are missing or incorrect
+                    $missingParamsRoute = $route;
+                }
             }
+        }
+
+        // If route was found but missing parameters, respond with 400 Bad Request
+        if ($missingParamsRoute) {
+            $this->respondWithError(400);
+            return;
         }
 
         // If route was found and the method is valid but mismatched, respond with 405 Method Not Allowed
         if ($methodAllowedForPath) {
             $this->respondWithError(405);
+            return;
         }
-        // No matching route found
-        else {
-            $this->respondWithError(404);
-        }
+
+        // No matching route found 
+        $this->respondWithError(404);
+        return;
     }
 
     /**
