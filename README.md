@@ -4,6 +4,20 @@
 [![Downloads](https://img.shields.io/packagist/dt/khantloonthu/php-router.svg?style=flat-square)](https://packagist.org/packages/khantloonthu/php-router/stats) 
 [![License](https://img.shields.io/packagist/l/khantloonthu/php-router.svg?style=flat-square)](https://github.com/khantloonthu/php-router/blob/master/LICENSE)
 
+# Table of Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Routing](#routing)
+- [Routing with params](#routing-with-params)
+- [Global Middleware](#global-middleware)
+- [Route-Specific middlewares](#route-specific-middlewares)
+- [Aborting](#aborting)
+- [Redirecting](#redirecting)
+- [Handle custom error pages](#handle-custom-error-pages)
+
+
 ## Overview
 This is a lightweight, simple, and extensible HTTP router implemented in PHP designed for basic to medium complexity web applications. It supports route registration, middleware, dynamic route parameters, error handling, and HTTP method overrides.
 Built by Khant Loon Thu _([https://github.com/KhantLoonThu](https://github.com/KhantLoonThu))_.
